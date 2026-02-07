@@ -11,7 +11,6 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .glass-card { background: white; border: 1px solid #e2e8f0; border-radius: 1.5rem; }
         
-        /* IMAGE STYLING: This ensures images in questions/explanations look professional */
         .quiz-img { 
             max-width: 100%; 
             height: auto; 
@@ -28,17 +27,12 @@
 </head>
 <body class="min-h-screen">
 
-    <div id="loading-overlay" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center">
-        <div class="loader w-12 h-12 border-4 border-slate-200 rounded-full mb-4"></div>
-        <p class="text-slate-500 font-medium animate-pulse">Syncing Database...</p>
-    </div>
-
     <nav class="bg-indigo-600 text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold flex items-center gap-2">
                 <i data-lucide="brain-circuit"></i> MathMaster Pro
             </h1>
-            <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Connecting...</div>
+            <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Local Mode</div>
         </div>
     </nav>
 
@@ -108,58 +102,32 @@
     </main>
 
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2BUItRqX90lyn72zePQKsziCTD5KghcOZH8uTbHQGi7TjE4TN7Ripjn58CfvDWm8OS283aa9yL9yg/pub?output=csv'; 
+        // --- LOCAL DATA BANK ---
+        const masterBank = [
+            { ch: 1, text: "If x - 7 = 13, what is x? <img src='' class='quiz-img'>", options: ["6", "15", "20", "21"], answer: "20", explanation: "Add 7 to both sides: 13 + 7 = 20." },
+            { ch: 1, text: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: "30", explanation: "0.15 * 200 = 30." },
+            { ch: 1, text: "Square root of 144 is?", options: ["10", "11", "12", "14"], answer: "12", explanation: "12 * 12 = 144.<img src='' class='quiz-img'>" },
+            
+            // Add your Chapter 2, 3, etc. questions here
+            { ch: 2, text: "Solve for y: 2y + 4 = 12", options: ["2", "4", "6", "8"], answer: "4", explanation: "Subtract 4: 2y = 8. Divide by 2: y = 4." }
+        ];
 
-        let masterBank = [];
         let currentQuestions = [];
         let userAnswers = [];
         let currentIndex = 0;
         let timer;
         let timeLeft;
 
-        async function fetchQuestions() {
-            try {
-                const response = await fetch(CSV_URL);
-                const csvData = await response.text();
-                const rows = csvData.split(/\r?\n/).slice(1);
-                
-                masterBank = rows.filter(row => row.trim() !== "").map(row => {
-                    const parts = parseCSVLine(row);
-                    return {
-                        ch: parseInt(parts[0]),
-                        text: parts[1],
-                        options: parts[2] ? parts[2].split('|') : [],
-                        answer: parts[3].trim(),
-                        explanation: parts[4]
-                    };
-                });
-                document.getElementById('db-status').innerText = 'Connected';
-                document.getElementById('loading-overlay').classList.add('hidden');
-                initChapters();
-            } catch (e) {
-                document.getElementById('db-status').innerText = 'Error';
-                alert("Database Error: Make sure your Sheet is 'Published to Web' as CSV.");
-            }
-        }
-
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"' && line[i+1] === '"') { current += '"'; i++; }
-                else if (char === '"') { inQuotes = !inQuotes; }
-                else if (char === ',' && !inQuotes) { result.push(current); current = ''; }
-                else { current += char; }
-            }
-            result.push(current);
-            return result;
+        // Replaces fetchQuestions
+        function initApp() {
+            lucide.createIcons();
+            initChapters();
         }
 
         function initChapters() {
             const select = document.getElementById('chapter-select');
             select.innerHTML = '';
+            // Extracts unique chapters from the array
             const chapters = [...new Set(masterBank.map(q => q.ch))].sort((a,b) => a-b);
             chapters.forEach(c => {
                 const opt = document.createElement('option');
@@ -181,7 +149,7 @@
             currentQuestions = pool.sort(() => Math.random() - 0.5).slice(0, count);
             userAnswers = new Array(currentQuestions.length).fill(null);
             currentIndex = 0;
-            timeLeft = count * 60; 
+            timeLeft = currentQuestions.length * 60; 
 
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -195,8 +163,6 @@
         function renderQuestion() {
             const q = currentQuestions[currentIndex];
             document.getElementById('current-idx').innerText = currentIndex + 1;
-            
-            // Using innerHTML so images/bold text from Sheet work
             document.getElementById('question-text').innerHTML = q.text;
             
             const container = document.getElementById('options-container');
@@ -251,7 +217,6 @@
                 const card = document.createElement('div');
                 card.className = `p-6 rounded-2xl border-l-4 shadow-sm ${isSkipped ? 'bg-slate-50 border-slate-400' : isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
                 
-                // Using innerHTML for explanation images
                 card.innerHTML = `
                     <div class="font-bold mb-2 text-slate-800">${i+1}. ${q.text}</div>
                     <div class="text-sm mb-1">Your Answer: <span class="font-bold">${uAns || 'No Answer'}</span></div>
@@ -284,7 +249,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        window.onload = fetchQuestions;
+        // Initialize immediately since data is local
+        window.onload = initApp;
     </script>
 </body>
 </html>
