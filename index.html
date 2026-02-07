@@ -27,14 +27,16 @@
 </head>
 <body class="min-h-screen">
 
-    <nav class="bg-indigo-600 text-white p-4 shadow-lg sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                <i data-lucide="brain-circuit"></i> MathMaster Pro
-            </h1>
-            <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Local Mode</div>
-        </div>
-    </nav>
+<nav class="bg-indigo-600 text-white p-4 shadow-lg sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold flex items-center gap-3">
+            <img src="kkkk.png" alt="Logo" class="w-8 h-8 object-contain">
+            
+            <span>Math koro bro</span>
+        </h1>
+        <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Local Mode</div>
+    </div>
+</nav>
 
     <main class="max-w-3xl mx-auto px-4 py-8">
         
@@ -103,14 +105,38 @@
 
     <script>
         // --- LOCAL DATA BANK ---
-        const masterBank = [
-            { ch: 1, text: "If x - 7 = 13, what is x? <img src='' class='quiz-img'>", options: ["6", "15", "20", "21"], answer: "20", explanation: "Add 7 to both sides: 13 + 7 = 20." },
-            { ch: 1, text: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: "30", explanation: "0.15 * 200 = 30." },
-            { ch: 1, text: "Square root of 144 is?", options: ["10", "11", "12", "14"], answer: "12", explanation: "12 * 12 = 144.<img src='' class='quiz-img'>" },
-            
-            // Add your Chapter 2, 3, etc. questions here
-            { ch: 2, text: "Solve for y: 2y + 4 = 12", options: ["2", "4", "6", "8"], answer: "4", explanation: "Subtract 4: 2y = 8. Divide by 2: y = 4." }
-        ];
+const masterBank = [
+    { ch: 1, text: "Every rational number is a __________.", options: ["Whole number", "Natural number", "Real number", "Integer"], answer: "Real number", explanation: "Real numbers consist of both rational and irrational numbers." },
+    { ch: 1, text: "The decimal representation of an irrational number is always __________.", options: ["Terminating", "Non-terminating repeating", "Non-terminating non-repeating", "None of these"], answer: "Non-terminating non-repeating", explanation: "Irrational numbers like √2 or π cannot be expressed as simple fractions and never repeat a pattern." },
+    { ch: 1, text: "The HCF of 95 and 152 is?", options: ["17", "19", "21", "23"], answer: "19", explanation: "95 = 5 * 19 and 152 = 8 * 19. The common factor is 19." },
+    { ch: 1, text: "If the HCF of two numbers is 1, then the numbers are called __________.", options: ["Composite", "Twin primes", "Co-prime", "Perfect numbers"], answer: "Co-prime", explanation: "Co-prime numbers have no common factor other than 1." },
+    { ch: 1, text: "The product of a non-zero rational and an irrational number is?", options: ["Always rational", "Always irrational", "Always an integer", "Sometimes rational"], answer: "Always irrational", explanation: "Multiplying a rational (like 2) by an irrational (like √3) results in an irrational number." },
+    { ch: 1, text: "The LCM of the smallest prime number and the smallest composite number is?", options: ["2", "4", "6", "8"], answer: "4", explanation: "Smallest prime is 2; smallest composite is 4. LCM(2, 4) = 4." },
+    { ch: 1, text: "For any two positive integers a and b, HCF(a, b) * LCM(a, b) = ?", options: ["a + b", "a - b", "a * b", "a / b"], answer: "a * b", explanation: "The product of HCF and LCM of two numbers is equal to the product of the numbers themselves." },
+    { ch: 1, text: "What is the exponent of 2 in the prime factorization of 144?", options: ["2", "3", "4", "5"], answer: "4", explanation: "144 = 2 * 2 * 2 * 2 * 3 * 3 = 2^4 * 3^2." },
+    { ch: 1, text: "The decimal expansion of 13/125 will terminate after how many places?", options: ["1", "2", "3", "4"], answer: "3", explanation: "125 = 5^3. The number of decimal places is determined by the highest power of 2 or 5." },
+    { ch: 1, text: "Which of the following is an irrational number?", options: ["√16", "√20", "√25", "√36"], answer: "√20", explanation: "√20 = 2√5, which cannot be simplified to a rational number." },
+    { ch: 1, text: "If p and q are co-prime, then p² and q² are __________.", options: ["Not co-prime", "Co-prime", "Even", "Odd"], answer: "Co-prime", explanation: "Squaring co-prime numbers does not introduce any new common factors." },
+    { ch: 1, text: "The HCF of 26 and 91 is?", options: ["7", "13", "26", "1"], answer: "13", explanation: "26 = 2 * 13 and 91 = 7 * 13." },
+    { ch: 1, text: "π (pi) is an __________.", options: ["Integer", "Rational number", "Irrational number", "Whole number"], answer: "Irrational number", explanation: "π is a non-terminating, non-repeating decimal." },
+    { ch: 1, text: "The value of 2 + √3 is __________.", options: ["Rational", "Irrational", "An integer", "A whole number"], answer: "Irrational", explanation: "The sum of a rational and an irrational number is always irrational." },
+    { ch: 1, text: "What is the HCF of two consecutive even numbers?", options: ["1", "2", "4", "None"], answer: "2", explanation: "Consecutive even numbers like 10 and 12 always have 2 as their greatest common divisor." },
+    { ch: 1, text: "What is the LCM of 12, 15, and 21?", options: ["420", "120", "210", "840"], answer: "420", explanation: "12=2²*3, 15=3*5, 21=3*7. LCM = 2²*3*5*7 = 420." },
+    { ch: 1, text: "The decimal expansion of 17/8 is?", options: ["2.125", "2.25", "2.12", "2.5"], answer: "2.125", explanation: "17 ÷ 8 = 2.125 (Terminating)." },
+    { ch: 1, text: "If n is a natural number, then 6ⁿ - 5ⁿ always ends with?", options: ["1", "3", "5", "7"], answer: "1", explanation: "Any power of 6 ends in 6, and any power of 5 ends in 5. 6 - 5 = 1." },
+    { ch: 1, text: "The largest number which divides 70 and 125, leaving remainders 5 and 8 respectively, is?", options: ["13", "65", "875", "1750"], answer: "13", explanation: "HCF(70-5, 125-8) = HCF(65, 117) = 13." },
+    { ch: 1, text: "If LCM(x, 18) = 36 and HCF(x, 18) = 2, then x is?", options: ["2", "3", "4", "5"], answer: "4", explanation: "x * 18 = 36 * 2 => x = 72 / 18 = 4." },
+    { ch: 1, text: "Which of the following has a terminating decimal expansion?", options: ["1/7", "3/13", "7/80", "5/12"], answer: "7/80", explanation: "80 = 2^4 * 5. If the denominator is in form 2ⁿ5ᵐ, it terminates." },
+    { ch: 1, text: "The product of three consecutive positive integers is always divisible by?", options: ["4", "6", "8", "10"], answer: "6", explanation: "Among three consecutive integers, at least one is even and one is a multiple of 3." },
+    { ch: 1, text: "The HCF of smallest prime and smallest odd prime is?", options: ["1", "2", "3", "4"], answer: "1", explanation: "Smallest prime is 2, smallest odd prime is 3. HCF(2, 3) = 1." },
+    { ch: 1, text: "2.13113111311113... is a/an __________.", options: ["Rational number", "Irrational number", "Integer", "Whole number"], answer: "Irrational number", explanation: "It is non-terminating and non-repeating." },
+    { ch: 1, text: "The sum of two irrational numbers is __________.", options: ["Always rational", "Always irrational", "Rational or irrational", "Always an integer"], answer: "Rational or irrational", explanation: "Example: √3 + (-√3) = 0 (rational), but √3 + √2 is irrational." },
+    { ch: 1, text: "If HCF(a, b) = 12 and a * b = 1800, then LCM(a, b) is?", options: ["150", "120", "180", "15"], answer: "150", explanation: "LCM = (a * b) / HCF = 1800 / 12 = 150." },
+    { ch: 1, text: "A number of the form 6q + 5 is always __________.", options: ["Even", "Odd", "Prime", "Composite"], answer: "Odd", explanation: "6q is always even, and even + 5 (odd) is always odd." },
+    { ch: 1, text: "The total number of factors of a prime number is?", options: ["1", "2", "3", "0"], answer: "2", explanation: "A prime number is only divisible by 1 and itself." },
+    { ch: 1, text: "What is the HCF of 4052 and 12576?", options: ["2", "4", "6", "8"], answer: "4", explanation: "Using Euclid's Algorithm, the highest common factor is found to be 4." },
+    { ch: 1, text: "If the HCF of 65 and 117 is expressible in the form 65m - 117, then m is?", options: ["4", "2", "1", "3"], answer: "2", explanation: "HCF(65, 117) = 13. 65m - 117 = 13 => 65m = 130 => m = 2." }
+];
 
         let currentQuestions = [];
         let userAnswers = [];
