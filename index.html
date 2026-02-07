@@ -10,17 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .glass-card { background: white; border: 1px solid #e2e8f0; border-radius: 1.5rem; }
-        
-        .quiz-img { 
-            max-width: 100%; 
-            height: auto; 
-            display: block; 
-            margin: 15px auto; 
-            border-radius: 0.75rem; 
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            border: 1px solid #e2e8f0;
-        }
-
+        .quiz-img { max-width: 100%; height: auto; display: block; margin: 15px auto; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
         .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -31,151 +21,124 @@
     <div class="max-w-4xl mx-auto flex justify-between items-center">
         <h1 class="text-xl font-bold flex items-center gap-3">
             <img src="kkkk.png" alt="Logo" class="w-8 h-8 object-contain">
-            
             <span>Math koro bro</span>
         </h1>
-        <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Local Mode</div>
+        <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Cloud Mode</div>
     </div>
 </nav>
 
-    <main class="max-w-3xl mx-auto px-4 py-8">
-        
-        <section id="setup-screen" class="glass-card p-8 shadow-xl">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6">Student Dashboard</h2>
-            <div class="space-y-6">
+<main class="max-w-3xl mx-auto px-4 py-8">
+    <section id="setup-screen" class="glass-card p-8 shadow-xl">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Student Dashboard</h2>
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Student Name</label>
+                <input type="text" id="student-name" placeholder="Enter your full name" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Student Name</label>
-                    <input type="text" id="student-name" placeholder="Enter your full name" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Select Chapter</label>
+                    <select id="chapter-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"></select>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Select Chapter</label>
-                        <select id="chapter-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Question Count</label>
-                        <select id="count-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="10">10 Questions</option>
-                            <option value="20" selected>20 Questions</option>
-                            <option value="50">50 Questions</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2 text-lg">
-                    <i data-lucide="play"></i> Begin Assessment
-                </button>
-            </div>
-        </section>
-
-        <section id="quiz-screen" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <div class="bg-white border px-5 py-2 rounded-2xl font-bold text-red-600 shadow-sm flex items-center gap-2">
-                    <i data-lucide="timer"></i> <span id="timer">00:00</span>
-                </div>
-                <div class="text-slate-500 font-bold bg-white px-4 py-2 rounded-2xl border shadow-sm">
-                    Q: <span id="current-idx">1</span> / <span id="total-idx">20</span>
+                <div>
+                    <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Question Count</label>
+                    <select id="count-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="10">10 Questions</option>
+                        <option value="20" selected>20 Questions</option>
+                        <option value="50">50 Questions</option>
+                    </select>
                 </div>
             </div>
-            <div class="glass-card p-8 min-h-[400px] shadow-xl flex flex-col">
-                <div id="question-text" class="text-xl font-bold text-slate-800 mb-8 leading-relaxed"></div>
-                
-                <div id="options-container" class="grid gap-3 mb-8"></div>
-                
-                <button onclick="skipQuestion()" class="mt-auto text-slate-400 font-bold hover:text-indigo-600 text-xs tracking-widest uppercase flex items-center justify-center gap-1">
-                    <i data-lucide="fast-forward" class="w-4"></i> Skip Question
-                </button>
+            <button id="start-btn" onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2 text-lg">
+                <i data-lucide="play"></i> Begin Assessment
+            </button>
+        </div>
+    </section>
+
+    <section id="quiz-screen" class="hidden">
+        <div class="flex justify-between items-center mb-6">
+            <div class="bg-white border px-5 py-2 rounded-2xl font-bold text-red-600 shadow-sm flex items-center gap-2">
+                <i data-lucide="timer"></i> <span id="timer">00:00</span>
             </div>
-        </section>
-
-        <section id="result-screen" class="hidden">
-            <div class="glass-card p-10 text-center mb-8 shadow-xl">
-                <div id="score-display" class="w-32 h-32 rounded-full bg-indigo-50 border-4 border-indigo-100 flex items-center justify-center mx-auto mb-4 text-3xl font-black text-indigo-600 shadow-inner">0/0</div>
-                <h2 class="text-3xl font-bold text-slate-800">Assessment Complete</h2>
-                
-                <div id="result-summary" class="mt-4"></div>
-
-                <button onclick="resetApp()" class="mt-8 bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition-all flex items-center gap-2 mx-auto">
-                    <i data-lucide="rotate-ccw"></i> Try Another Chapter
-                </button>
+            <div class="text-slate-500 font-bold bg-white px-4 py-2 rounded-2xl border shadow-sm">
+                Q: <span id="current-idx">1</span> / <span id="total-idx">20</span>
             </div>
-            <h3 class="text-lg font-bold text-slate-700 mb-4 px-2">Detailed Review</h3>
-            <div id="review-container" class="space-y-4"></div>
-        </section>
-    </main>
+        </div>
+        <div class="glass-card p-8 min-h-[400px] shadow-xl flex flex-col">
+            <div id="question-text" class="text-xl font-bold text-slate-800 mb-8 leading-relaxed"></div>
+            <div id="options-container" class="grid gap-3 mb-8"></div>
+            <button onclick="skipQuestion()" class="mt-auto text-slate-400 font-bold hover:text-indigo-600 text-xs tracking-widest uppercase flex items-center justify-center gap-1">
+                <i data-lucide="fast-forward" class="w-4"></i> Skip Question
+            </button>
+        </div>
+    </section>
 
-    <script>
-        // --- LOCAL DATA BANK ---
-const masterBank = [
-    { ch: 1, text: "Every rational number is a __________.", options: ["Whole number", "Natural number", "Real number", "Integer"], answer: "Real number", explanation: "Real numbers consist of both rational and irrational numbers." },
-    { ch: 1, text: "The decimal representation of an irrational number is always __________.", options: ["Terminating", "Non-terminating repeating", "Non-terminating non-repeating", "None of these"], answer: "Non-terminating non-repeating", explanation: "Irrational numbers like √2 or π cannot be expressed as simple fractions and never repeat a pattern." },
-    { ch: 1, text: "The HCF of 95 and 152 is?", options: ["17", "19", "21", "23"], answer: "19", explanation: "95 = 5 * 19 and 152 = 8 * 19. The common factor is 19." },
-    { ch: 1, text: "If the HCF of two numbers is 1, then the numbers are called __________.", options: ["Composite", "Twin primes", "Co-prime", "Perfect numbers"], answer: "Co-prime", explanation: "Co-prime numbers have no common factor other than 1." },
-    { ch: 1, text: "The product of a non-zero rational and an irrational number is?", options: ["Always rational", "Always irrational", "Always an integer", "Sometimes rational"], answer: "Always irrational", explanation: "Multiplying a rational (like 2) by an irrational (like √3) results in an irrational number." },
-    { ch: 1, text: "The LCM of the smallest prime number and the smallest composite number is?", options: ["2", "4", "6", "8"], answer: "4", explanation: "Smallest prime is 2; smallest composite is 4. LCM(2, 4) = 4." },
-    { ch: 1, text: "For any two positive integers a and b, HCF(a, b) * LCM(a, b) = ?", options: ["a + b", "a - b", "a * b", "a / b"], answer: "a * b", explanation: "The product of HCF and LCM of two numbers is equal to the product of the numbers themselves." },
-    { ch: 1, text: "What is the exponent of 2 in the prime factorization of 144?", options: ["2", "3", "4", "5"], answer: "4", explanation: "144 = 2 * 2 * 2 * 2 * 3 * 3 = 2^4 * 3^2." },
-    { ch: 1, text: "The decimal expansion of 13/125 will terminate after how many places?", options: ["1", "2", "3", "4"], answer: "3", explanation: "125 = 5^3. The number of decimal places is determined by the highest power of 2 or 5." },
-    { ch: 1, text: "Which of the following is an irrational number?", options: ["√16", "√20", "√25", "√36"], answer: "√20", explanation: "√20 = 2√5, which cannot be simplified to a rational number." },
-    { ch: 1, text: "If p and q are co-prime, then p² and q² are __________.", options: ["Not co-prime", "Co-prime", "Even", "Odd"], answer: "Co-prime", explanation: "Squaring co-prime numbers does not introduce any new common factors." },
-    { ch: 1, text: "The HCF of 26 and 91 is?", options: ["7", "13", "26", "1"], answer: "13", explanation: "26 = 2 * 13 and 91 = 7 * 13." },
-    { ch: 1, text: "π (pi) is an __________.", options: ["Integer", "Rational number", "Irrational number", "Whole number"], answer: "Irrational number", explanation: "π is a non-terminating, non-repeating decimal." },
-    { ch: 1, text: "The value of 2 + √3 is __________.", options: ["Rational", "Irrational", "An integer", "A whole number"], answer: "Irrational", explanation: "The sum of a rational and an irrational number is always irrational." },
-    { ch: 1, text: "What is the HCF of two consecutive even numbers?", options: ["1", "2", "4", "None"], answer: "2", explanation: "Consecutive even numbers like 10 and 12 always have 2 as their greatest common divisor." },
-    { ch: 1, text: "What is the LCM of 12, 15, and 21?", options: ["420", "120", "210", "840"], answer: "420", explanation: "12=2²*3, 15=3*5, 21=3*7. LCM = 2²*3*5*7 = 420." },
-    { ch: 1, text: "The decimal expansion of 17/8 is?", options: ["2.125", "2.25", "2.12", "2.5"], answer: "2.125", explanation: "17 ÷ 8 = 2.125 (Terminating)." },
-    { ch: 1, text: "If n is a natural number, then 6ⁿ - 5ⁿ always ends with?", options: ["1", "3", "5", "7"], answer: "1", explanation: "Any power of 6 ends in 6, and any power of 5 ends in 5. 6 - 5 = 1." },
-    { ch: 1, text: "The largest number which divides 70 and 125, leaving remainders 5 and 8 respectively, is?", options: ["13", "65", "875", "1750"], answer: "13", explanation: "HCF(70-5, 125-8) = HCF(65, 117) = 13." },
-    { ch: 1, text: "If LCM(x, 18) = 36 and HCF(x, 18) = 2, then x is?", options: ["2", "3", "4", "5"], answer: "4", explanation: "x * 18 = 36 * 2 => x = 72 / 18 = 4." },
-    { ch: 1, text: "Which of the following has a terminating decimal expansion?", options: ["1/7", "3/13", "7/80", "5/12"], answer: "7/80", explanation: "80 = 2^4 * 5. If the denominator is in form 2ⁿ5ᵐ, it terminates." },
-    { ch: 1, text: "The product of three consecutive positive integers is always divisible by?", options: ["4", "6", "8", "10"], answer: "6", explanation: "Among three consecutive integers, at least one is even and one is a multiple of 3." },
-    { ch: 1, text: "The HCF of smallest prime and smallest odd prime is?", options: ["1", "2", "3", "4"], answer: "1", explanation: "Smallest prime is 2, smallest odd prime is 3. HCF(2, 3) = 1." },
-    { ch: 1, text: "2.13113111311113... is a/an __________.", options: ["Rational number", "Irrational number", "Integer", "Whole number"], answer: "Irrational number", explanation: "It is non-terminating and non-repeating." },
-    { ch: 1, text: "The sum of two irrational numbers is __________.", options: ["Always rational", "Always irrational", "Rational or irrational", "Always an integer"], answer: "Rational or irrational", explanation: "Example: √3 + (-√3) = 0 (rational), but √3 + √2 is irrational." },
-    { ch: 1, text: "If HCF(a, b) = 12 and a * b = 1800, then LCM(a, b) is?", options: ["150", "120", "180", "15"], answer: "150", explanation: "LCM = (a * b) / HCF = 1800 / 12 = 150." },
-    { ch: 1, text: "A number of the form 6q + 5 is always __________.", options: ["Even", "Odd", "Prime", "Composite"], answer: "Odd", explanation: "6q is always even, and even + 5 (odd) is always odd." },
-    { ch: 1, text: "The total number of factors of a prime number is?", options: ["1", "2", "3", "0"], answer: "2", explanation: "A prime number is only divisible by 1 and itself." },
-    { ch: 1, text: "What is the HCF of 4052 and 12576?", options: ["2", "4", "6", "8"], answer: "4", explanation: "Using Euclid's Algorithm, the highest common factor is found to be 4." },
-    { ch: 1, text: "If the HCF of 65 and 117 is expressible in the form 65m - 117, then m is?", options: ["4", "2", "1", "3"], answer: "2", explanation: "HCF(65, 117) = 13. 65m - 117 = 13 => 65m = 130 => m = 2." }
-];
+    <section id="result-screen" class="hidden">
+        <div class="glass-card p-10 text-center mb-8 shadow-xl">
+            <div id="score-display" class="w-32 h-32 rounded-full bg-indigo-50 border-4 border-indigo-100 flex items-center justify-center mx-auto mb-4 text-3xl font-black text-indigo-600 shadow-inner">0/0</div>
+            <h2 class="text-3xl font-bold text-slate-800">Assessment Complete</h2>
+            <div id="result-summary" class="mt-4"></div>
+            <button onclick="resetApp()" class="mt-8 bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition-all flex items-center gap-2 mx-auto">
+                <i data-lucide="rotate-ccw"></i> Try Another Chapter
+            </button>
+        </div>
+        <h3 class="text-lg font-bold text-slate-700 mb-4 px-2">Detailed Review</h3>
+        <div id="review-container" class="space-y-4"></div>
+    </section>
+</main>
 
-        let currentQuestions = [];
-        let userAnswers = [];
-        let currentIndex = 0;
-        let timer;
-        let timeLeft;
+<script>
+    // Configuration: Add your chapter numbers here as you create them
+    const availableChapters = [1, 2]; 
+    
+    let currentQuestions = [];
+    let userAnswers = [];
+    let currentIndex = 0;
+    let timer;
+    let timeLeft;
 
-        // Replaces fetchQuestions
-        function initApp() {
-            lucide.createIcons();
-            initChapters();
-        }
+    function initApp() {
+        lucide.createIcons();
+        const select = document.getElementById('chapter-select');
+        availableChapters.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c; opt.innerText = `Chapter ${c}`;
+            select.appendChild(opt);
+        });
+    }
 
-        function initChapters() {
-            const select = document.getElementById('chapter-select');
-            select.innerHTML = '';
-            // Extracts unique chapters from the array
-            const chapters = [...new Set(masterBank.map(q => q.ch))].sort((a,b) => a-b);
-            chapters.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c; opt.innerText = `Chapter ${c}`;
-                select.appendChild(opt);
-            });
-        }
-
-        function startQuiz() {
-            const name = document.getElementById('student-name').value;
-            if(!name) return alert("Please enter your name.");
+    // Dynamic Script Loader
+    async function loadChapterData(chNum) {
+        return new Promise((resolve, reject) => {
+            // Check if already loaded
+            if (window.chapterData && window.chapterData[chNum]) return resolve(window.chapterData[chNum]);
             
-            const ch = parseInt(document.getElementById('chapter-select').value);
-            const count = parseInt(document.getElementById('count-select').value);
-            const pool = masterBank.filter(q => q.ch === ch);
-            
-            if(pool.length === 0) return alert("This chapter has no questions yet.");
+            const script = document.createElement('script');
+            // Path must match your GitHub folder structure
+            script.src = `chapters/ch${chNum}.js`; 
+            script.onload = () => resolve(window.chapterData[chNum]);
+            script.onerror = () => reject("Chapter file not found or failed to load.");
+            document.head.appendChild(script);
+        });
+    }
 
+    async function startQuiz() {
+        const name = document.getElementById('student-name').value;
+        if(!name) return alert("Please enter your name.");
+        
+        const btn = document.getElementById('start-btn');
+        const ch = document.getElementById('chapter-select').value;
+        const count = parseInt(document.getElementById('count-select').value);
+
+        btn.disabled = true;
+        btn.innerText = "Loading Questions...";
+
+        try {
+            const pool = await loadChapterData(ch);
             currentQuestions = pool.sort(() => Math.random() - 0.5).slice(0, count);
             userAnswers = new Array(currentQuestions.length).fill(null);
             currentIndex = 0;
-            timeLeft = currentQuestions.length * 60; 
+            timeLeft = currentQuestions.length * 60;
 
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -183,100 +146,80 @@ const masterBank = [
             
             runTimer();
             renderQuestion();
+        } catch (err) {
+            alert(err);
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="play"></i> Begin Assessment`;
             lucide.createIcons();
         }
+    }
 
-        function renderQuestion() {
-            const q = currentQuestions[currentIndex];
-            document.getElementById('current-idx').innerText = currentIndex + 1;
-            document.getElementById('question-text').innerHTML = q.text;
-            
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
-            
-            [...q.options].forEach(opt => {
-                const b = document.createElement('button');
-                b.className = "w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all font-semibold shadow-sm";
-                b.innerText = opt;
-                b.onclick = () => { userAnswers[currentIndex] = opt; next(); };
-                container.appendChild(b);
-            });
-        }
+    function renderQuestion() {
+        const q = currentQuestions[currentIndex];
+        document.getElementById('current-idx').innerText = currentIndex + 1;
+        document.getElementById('question-text').innerHTML = q.text;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        q.options.forEach(opt => {
+            const b = document.createElement('button');
+            b.className = "w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all font-semibold shadow-sm";
+            b.innerText = opt;
+            b.onclick = () => { userAnswers[currentIndex] = opt; next(); };
+            container.appendChild(b);
+        });
+    }
 
-        function skipQuestion() { userAnswers[currentIndex] = "Skipped"; next(); }
+    function skipQuestion() { userAnswers[currentIndex] = "Skipped"; next(); }
+    function next() { if(currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); } else { end(); } }
+    
+    function runTimer() {
+        if(timer) clearInterval(timer);
+        timer = setInterval(() => {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(timeLeft <= 0) end();
+            timeLeft--;
+        }, 1000);
+    }
 
-        function next() {
-            if(currentIndex < currentQuestions.length - 1) {
-                currentIndex++; renderQuestion();
-            } else { end(); }
-        }
+    function end() {
+        clearInterval(timer);
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        let correct = 0, skipped = 0, wrong = 0;
+        const container = document.getElementById('review-container');
+        container.innerHTML = ''; 
+        currentQuestions.forEach((q, i) => {
+            const uAns = userAnswers[i];
+            const isCorrect = String(uAns).trim() === String(q.answer).trim();
+            const isSkipped = uAns === "Skipped" || uAns === null;
+            if(isSkipped) skipped++; else if(isCorrect) correct++; else wrong++;
+            const card = document.createElement('div');
+            card.className = `p-6 rounded-2xl border-l-4 shadow-sm ${isSkipped ? 'bg-slate-50 border-slate-400' : isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
+            card.innerHTML = `
+                <div class="font-bold mb-2 text-slate-800">${i+1}. ${q.text}</div>
+                <div class="text-sm mb-1">Your Answer: <span class="font-bold">${uAns || 'No Answer'}</span></div>
+                <div class="text-sm text-green-700 font-bold mb-3">Correct Answer: ${q.answer}</div>
+                <div class="text-xs bg-white/60 p-3 rounded-lg border border-slate-100 text-slate-600"><span class="font-bold uppercase text-[10px] block mb-1">Explanation</span>${q.explanation}</div>`;
+            container.appendChild(card);
+        });
+        document.getElementById('score-display').innerText = `${correct}/${currentQuestions.length}`;
+        document.getElementById('result-summary').innerHTML = `<div class="flex justify-center gap-2 mt-4 text-sm font-bold"><span class="bg-green-100 text-green-700 px-4 py-2 rounded-xl border border-green-200">Correct: ${correct}</span><span class="bg-red-100 text-red-700 px-4 py-2 rounded-xl border border-red-200">Wrong: ${wrong}</span><span class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl border border-slate-200">Skipped: ${skipped}</span></div>`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        lucide.createIcons();
+    }
 
-        function runTimer() {
-            if(timer) clearInterval(timer);
-            timer = setInterval(() => {
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if(timeLeft <= 0) end();
-                timeLeft--;
-            }, 1000);
-        }
+    function resetApp() {
+        const btn = document.getElementById('start-btn');
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="play"></i> Begin Assessment`;
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('setup-screen').classList.remove('hidden');
+        lucide.createIcons();
+    }
 
-        function end() {
-            clearInterval(timer);
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            
-            let correct = 0, skipped = 0, wrong = 0;
-            const container = document.getElementById('review-container');
-            container.innerHTML = ''; 
-            
-            currentQuestions.forEach((q, i) => {
-                const uAns = userAnswers[i];
-                const isCorrect = String(uAns).trim() === String(q.answer).trim();
-                const isSkipped = uAns === "Skipped" || uAns === null;
-
-                if(isSkipped) skipped++;
-                else if(isCorrect) correct++;
-                else wrong++;
-
-                const card = document.createElement('div');
-                card.className = `p-6 rounded-2xl border-l-4 shadow-sm ${isSkipped ? 'bg-slate-50 border-slate-400' : isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
-                
-                card.innerHTML = `
-                    <div class="font-bold mb-2 text-slate-800">${i+1}. ${q.text}</div>
-                    <div class="text-sm mb-1">Your Answer: <span class="font-bold">${uAns || 'No Answer'}</span></div>
-                    <div class="text-sm text-green-700 font-bold mb-3">Correct Answer: ${q.answer}</div>
-                    <div class="text-xs bg-white/60 p-3 rounded-lg border border-slate-100 text-slate-600">
-                        <span class="font-bold uppercase text-[10px] block mb-1">Explanation</span>
-                        ${q.explanation}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            document.getElementById('score-display').innerText = `${correct}/${currentQuestions.length}`;
-            document.getElementById('result-summary').innerHTML = `
-                <div class="flex justify-center gap-2 mt-4 text-sm font-bold">
-                    <span class="bg-green-100 text-green-700 px-4 py-2 rounded-xl border border-green-200">Correct: ${correct}</span>
-                    <span class="bg-red-100 text-red-700 px-4 py-2 rounded-xl border border-red-200">Wrong: ${wrong}</span>
-                    <span class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl border border-slate-200">Skipped: ${skipped}</span>
-                </div>
-            `;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            lucide.createIcons();
-        }
-
-        function resetApp() {
-            clearInterval(timer);
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('setup-screen').classList.remove('hidden');
-            document.getElementById('student-name').value = '';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Initialize immediately since data is local
-        window.onload = initApp;
-    </script>
+    window.onload = initApp;
+</script>
 </body>
 </html>
