@@ -3,224 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathMaster | Pro Quiz System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Coming Soon | Under Construction</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .glass-card { background: white; border: 1px solid #e2e8f0; border-radius: 1.5rem; }
-        .quiz-img { max-width: 100%; height: auto; display: block; margin: 15px auto; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
-        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root {
+            --primary-color: #2d3436;
+            --accent-color: #0984e3;
+            --text-light: #636e72;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            color: var(--primary-color);
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Simple Loading Animation */
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #dfe6e9;
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .contact-link {
+            text-decoration: none;
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent-color);
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #b2bec3;
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-<nav class="bg-indigo-600 text-white p-4 shadow-lg sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold flex items-center gap-3">
-            <img src="images/kkkk.png" alt="Logo" class="w-8 h-8 object-contain">
-            <span>Math koro bro</span>
-        </h1>
-        <div id="db-status" class="text-xs bg-indigo-500 px-3 py-1 rounded-full uppercase font-bold">Cloud Mode</div>
+    <div class="container">
+        <div class="loader"></div>
+        <div class="logo">🚀</div>
+        <h1>Great things are coming.</h1>
+        <p>
+            We're currently working hard to bring you a brand new experience. 
+            Check back soon or reach out to us directly if you have questions.
+        </p>
+        <a href="mailto:hello@yourdomain.com" class="contact-link">Get in touch &rarr;</a>
     </div>
-</nav>
 
-<main class="max-w-3xl mx-auto px-4 py-8">
-    <section id="setup-screen" class="glass-card p-8 shadow-xl">
-        <h2 class="text-2xl font-bold text-slate-800 mb-6">Student Dashboard</h2>
-        <div class="space-y-6">
-            <div>
-                <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Student Name</label>
-                <input type="text" id="student-name" placeholder="Enter your full name" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Select Chapter</label>
-                    <select id="chapter-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"></select>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-500 mb-2 uppercase">Question Count</label>
-                    <select id="count-select" class="w-full p-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="10">10 Questions</option>
-                        <option value="20" selected>20 Questions</option>
-                        <option value="50">50 Questions</option>
-                    </select>
-                </div>
-            </div>
-            <button id="start-btn" onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2 text-lg">
-                <i data-lucide="play"></i> Begin Assessment
-            </button>
-        </div>
-    </section>
+    <footer>
+        &copy; 2026 Your Brand Name. All rights reserved.
+    </footer>
 
-    <section id="quiz-screen" class="hidden">
-        <div class="flex justify-between items-center mb-6">
-            <div class="bg-white border px-5 py-2 rounded-2xl font-bold text-red-600 shadow-sm flex items-center gap-2">
-                <i data-lucide="timer"></i> <span id="timer">00:00</span>
-            </div>
-            <div class="text-slate-500 font-bold bg-white px-4 py-2 rounded-2xl border shadow-sm">
-                Q: <span id="current-idx">1</span> / <span id="total-idx">20</span>
-            </div>
-        </div>
-        <div class="glass-card p-8 min-h-[400px] shadow-xl flex flex-col">
-            <div id="question-text" class="text-xl font-bold text-slate-800 mb-8 leading-relaxed"></div>
-            <div id="options-container" class="grid gap-3 mb-8"></div>
-            <button onclick="skipQuestion()" class="mt-auto text-slate-400 font-bold hover:text-indigo-600 text-xs tracking-widest uppercase flex items-center justify-center gap-1">
-                <i data-lucide="fast-forward" class="w-4"></i> Skip Question
-            </button>
-        </div>
-    </section>
-
-    <section id="result-screen" class="hidden">
-        <div class="glass-card p-10 text-center mb-8 shadow-xl">
-            <div id="score-display" class="w-32 h-32 rounded-full bg-indigo-50 border-4 border-indigo-100 flex items-center justify-center mx-auto mb-4 text-3xl font-black text-indigo-600 shadow-inner">0/0</div>
-            <h2 class="text-3xl font-bold text-slate-800">Assessment Complete</h2>
-            <div id="result-summary" class="mt-4"></div>
-            <button onclick="resetApp()" class="mt-8 bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition-all flex items-center gap-2 mx-auto">
-                <i data-lucide="rotate-ccw"></i> Try Another Chapter
-            </button>
-        </div>
-        <h3 class="text-lg font-bold text-slate-700 mb-4 px-2">Detailed Review</h3>
-        <div id="review-container" class="space-y-4"></div>
-    </section>
-</main>
-
-<script>
-    // Configuration: Add your chapter numbers here as you create them
-
-const availableChapters = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]; 
-    
-    let currentQuestions = [];
-    let userAnswers = [];
-    let currentIndex = 0;
-    let timer;
-    let timeLeft;
-
-    function initApp() {
-        lucide.createIcons();
-        const select = document.getElementById('chapter-select');
-        availableChapters.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c; opt.innerText = `Chapter ${c}`;
-            select.appendChild(opt);
-        });
-    }
-
-    // Dynamic Script Loader
-    async function loadChapterData(chNum) {
-        return new Promise((resolve, reject) => {
-            // Check if already loaded
-            if (window.chapterData && window.chapterData[chNum]) return resolve(window.chapterData[chNum]);
-            
-            const script = document.createElement('script');
-            // Path must match your GitHub folder structure
-            script.src = `chapters/ch${chNum}.js`; 
-            script.onload = () => resolve(window.chapterData[chNum]);
-            script.onerror = () => reject("Chapter file not found or failed to load.");
-            document.head.appendChild(script);
-        });
-    }
-
-    async function startQuiz() {
-        const name = document.getElementById('student-name').value;
-        if(!name) return alert("Please enter your name.");
-        
-        const btn = document.getElementById('start-btn');
-        const ch = document.getElementById('chapter-select').value;
-        const count = parseInt(document.getElementById('count-select').value);
-
-        btn.disabled = true;
-        btn.innerText = "Loading Questions...";
-
-        try {
-            const pool = await loadChapterData(ch);
-            currentQuestions = pool.sort(() => Math.random() - 0.5).slice(0, count);
-            userAnswers = new Array(currentQuestions.length).fill(null);
-            currentIndex = 0;
-            timeLeft = currentQuestions.length * 60;
-
-            document.getElementById('setup-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('total-idx').innerText = currentQuestions.length;
-            
-            runTimer();
-            renderQuestion();
-        } catch (err) {
-            alert(err);
-            btn.disabled = false;
-            btn.innerHTML = `<i data-lucide="play"></i> Begin Assessment`;
-            lucide.createIcons();
-        }
-    }
-
-    function renderQuestion() {
-        const q = currentQuestions[currentIndex];
-        document.getElementById('current-idx').innerText = currentIndex + 1;
-        document.getElementById('question-text').innerHTML = q.text;
-        const container = document.getElementById('options-container');
-        container.innerHTML = '';
-        q.options.forEach(opt => {
-            const b = document.createElement('button');
-            b.className = "w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all font-semibold shadow-sm";
-            b.innerText = opt;
-            b.onclick = () => { userAnswers[currentIndex] = opt; next(); };
-            container.appendChild(b);
-        });
-    }
-
-    function skipQuestion() { userAnswers[currentIndex] = "Skipped"; next(); }
-    function next() { if(currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); } else { end(); } }
-    
-    function runTimer() {
-        if(timer) clearInterval(timer);
-        timer = setInterval(() => {
-            const m = Math.floor(timeLeft / 60);
-            const s = timeLeft % 60;
-            document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-            if(timeLeft <= 0) end();
-            timeLeft--;
-        }, 1000);
-    }
-
-    function end() {
-        clearInterval(timer);
-        document.getElementById('quiz-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.remove('hidden');
-        let correct = 0, skipped = 0, wrong = 0;
-        const container = document.getElementById('review-container');
-        container.innerHTML = ''; 
-        currentQuestions.forEach((q, i) => {
-            const uAns = userAnswers[i];
-            const isCorrect = String(uAns).trim() === String(q.answer).trim();
-            const isSkipped = uAns === "Skipped" || uAns === null;
-            if(isSkipped) skipped++; else if(isCorrect) correct++; else wrong++;
-            const card = document.createElement('div');
-            card.className = `p-6 rounded-2xl border-l-4 shadow-sm ${isSkipped ? 'bg-slate-50 border-slate-400' : isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
-            card.innerHTML = `
-                <div class="font-bold mb-2 text-slate-800">${i+1}. ${q.text}</div>
-                <div class="text-sm mb-1">Your Answer: <span class="font-bold">${uAns || 'No Answer'}</span></div>
-                <div class="text-sm text-green-700 font-bold mb-3">Correct Answer: ${q.answer}</div>
-                <div class="text-xs bg-white/60 p-3 rounded-lg border border-slate-100 text-slate-600"><span class="font-bold uppercase text-[10px] block mb-1">Explanation</span>${q.explanation}</div>`;
-            container.appendChild(card);
-        });
-        document.getElementById('score-display').innerText = `${correct}/${currentQuestions.length}`;
-        document.getElementById('result-summary').innerHTML = `<div class="flex justify-center gap-2 mt-4 text-sm font-bold"><span class="bg-green-100 text-green-700 px-4 py-2 rounded-xl border border-green-200">Correct: ${correct}</span><span class="bg-red-100 text-red-700 px-4 py-2 rounded-xl border border-red-200">Wrong: ${wrong}</span><span class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl border border-slate-200">Skipped: ${skipped}</span></div>`;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        lucide.createIcons();
-    }
-
-    function resetApp() {
-        const btn = document.getElementById('start-btn');
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="play"></i> Begin Assessment`;
-        document.getElementById('result-screen').classList.add('hidden');
-        document.getElementById('setup-screen').classList.remove('hidden');
-        lucide.createIcons();
-    }
-
-    window.onload = initApp;
-</script>
 </body>
 </html>
