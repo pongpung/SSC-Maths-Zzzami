@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>SSC Math Master | Pro Edition</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet"/>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            },
+            startup: {
+                typeset: false // We will manually typeset when content changes
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006a4e", // SSC Green
+                        "primary-dark": "#00523c",
+                        "accent": "#f42a41",  // Red accent
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            background-color: #f6f6f8;
+        }
+        
+        /* Smooth Screen Transitions */
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar for Math content */
+        .math-content {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .math-content::-webkit-scrollbar {
+            height: 4px;
+        }
+        .math-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Palette Grid Animation */
+        .palette-modal {
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .palette-modal.open {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-slate-900 bg-background-light">
+
+    <div id="screen-setup" class="screen active">
+        <div class="max-w-md mx-auto w-full min-h-screen relative flex flex-col">
+            <header class="px-6 pt-12 pb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h1 class="text-2xl font-bold tracking-tight text-primary">SSC Math Master</h1>
+                </div>
+                <div id="connection-status" class="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white w-fit px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+                    <span class="material-icons text-sm animate-spin">sync</span>
+                    Connecting to Database...
+                </div>
+            </header>
+            
+            <main class="flex-grow px-6 py-4 space-y-6">
+                <div class="relative w-full h-40 rounded-3xl overflow-hidden shadow-lg bg-gradient-to-br from-primary to-emerald-700">
+                    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                    <div class="relative h-full flex flex-col justify-end p-6 text-white">
+                        <p class="text-sm font-medium opacity-90">Board Standard Practice</p>
+                        <h2 class="text-2xl font-bold">Ready to excel?</h2>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-5">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-600 ml-1">Student Name</label>
+                        <div class="relative">
+                            <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">person</span>
+                            <input id="user-name" class="w-full pl-12 pr-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-primary focus:ring-0 rounded-xl transition-all font-medium" placeholder="Enter your name" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-600 ml-1">Select Chapter</label>
+                        <div class="relative">
+                            <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">auto_stories</span>
+                            <select id="select-chapter" class="w-full pl-12 pr-10 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-primary focus:ring-0 rounded-xl transition-all font-medium appearance-none text-slate-700">
+                                <option disabled selected>Loading chapters...</option>
+                            </select>
+                            <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-600 ml-1">Questions & Duration</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectCount(this, 10)" class="count-btn active bg-primary text-white py-3 rounded-xl font-bold text-sm border-2 border-primary transition-all">10 Qs<br><span class="text-[10px] font-normal opacity-80">10 Min</span></button>
+                            <button onclick="selectCount(this, 20)" class="count-btn bg-white text-slate-600 py-3 rounded-xl font-bold text-sm border-2 border-slate-100 hover:border-primary/30 transition-all">20 Qs<br><span class="text-[10px] font-normal opacity-80">20 Min</span></button>
+                            <button onclick="selectCount(this, 30)" class="count-btn bg-white text-slate-600 py-3 rounded-xl font-bold text-sm border-2 border-slate-100 hover:border-primary/30 transition-all">30 Qs<br><span class="text-[10px] font-normal opacity-80">30 Min</span></button>
+                        </div>
+                        <input type="hidden" id="selected-count" value="10">
+                    </div>
+                </div>
+            </main>
+
+            <footer class="p-6 bg-white/50 backdrop-blur-sm sticky bottom-0">
+                <button onclick="App.start()" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center gap-3 active:scale-[0.98] transition-all">
+                    <span>Start Quiz</span>
+                    <span class="material-icons">arrow_forward</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+
+    <div id="screen-quiz" class="screen w-full relative">
+        <header class="sticky top-0 bg-white/90 backdrop-blur-md z-30 px-6 pt-4 pb-2 border-b border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+                <button onclick="location.reload()" class="p-2 -ml-2 text-slate-400 hover:text-accent transition-colors">
+                    <span class="material-icons">close</span>
+                </button>
+                <div class="flex items-center space-x-2 bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">
+                    <span class="material-icons text-primary text-sm">timer</span>
+                    <span id="timer-display" class="text-primary font-bold tabular-nums font-mono">00:00</span>
+                </div>
+                <button onclick="App.togglePalette()" class="p-2 -mr-2 text-slate-500 hover:text-primary transition-colors relative">
+                    <span class="material-icons">grid_view</span>
+                    <span id="palette-badge" class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full hidden"></span>
+                </button>
+            </div>
+            <div class="space-y-1">
+                <div class="flex justify-between items-end px-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Progress</span>
+                    <span id="progress-text" class="text-xs font-bold text-primary">1 / 10</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-primary h-full w-[0%] rounded-full transition-all duration-500"></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-6 py-6 flex flex-col max-w-md mx-auto w-full pb-32">
+            <div class="mb-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden min-h-[160px] flex flex-col justify-center">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+                    <div class="absolute right-[-20px] top-[-20px] opacity-5">
+                        <span class="material-icons text-9xl">functions</span>
+                    </div>
+                    
+                    <h2 class="text-lg font-medium leading-relaxed text-slate-800 math-content" id="question-text">
+                        Loading Question...
+                    </h2>
+                </div>
+            </div>
+
+            <div id="options-container" class="space-y-3 flex-1">
+                </div>
+        </main>
+
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 safe-area-bottom z-20">
+            <div class="flex items-center gap-4 max-w-md mx-auto">
+                <button onclick="App.move(-1)" class="flex-1 flex items-center justify-center px-4 py-3 rounded-xl border-2 border-slate-100 font-bold text-slate-500 active:bg-slate-50 transition-colors">
+                    <span class="material-icons mr-1">chevron_left</span> Prev
+                </button>
+                
+                <button id="flag-btn" onclick="App.toggleFlag()" class="px-4 py-3 rounded-xl border-2 border-yellow-100 text-yellow-600 bg-yellow-50 active:bg-yellow-100 transition-colors">
+                    <span class="material-icons">flag</span>
+                </button>
+
+                <button id="next-btn" onclick="App.move(1)" class="flex-[2] flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25 active:scale-95 transition-all">
+                    Next <span class="material-icons ml-1">chevron_right</span>
+                </button>
+                
+                <button id="submit-btn" onclick="App.finish()" class="hidden flex-[2] flex items-center justify-center px-6 py-3 rounded-xl bg-accent text-white font-bold shadow-lg shadow-accent/25 active:scale-95 transition-all">
+                    Submit <span class="material-icons ml-1">done_all</span>
+                </button>
+            </div>
+        </footer>
+
+        <div id="palette-modal" class="palette-modal fixed inset-0 z-50 flex flex-col justify-end pointer-events-none">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto opacity-0 transition-opacity" id="palette-overlay" onclick="App.togglePalette()"></div>
+            <div class="bg-white rounded-t-3xl p-6 pointer-events-auto shadow-2xl relative max-h-[70vh] overflow-y-auto">
+                <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Question Overview</h3>
+                <div id="palette-grid" class="grid grid-cols-5 gap-3">
+                    </div>
+                
+                <div class="mt-6 flex justify-center gap-4 text-xs font-semibold text-slate-500">
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-primary"></div> Done</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-yellow-400"></div> Review</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full border-2 border-slate-300"></div> Left</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="screen-results" class="screen w-full bg-white">
+        <div class="max-w-md mx-auto min-h-screen relative flex flex-col">
+            <div class="relative pt-10 pb-8 px-6 text-center bg-slate-50">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <span class="material-icons text-primary text-4xl">emoji_events</span>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-900 mb-1">Quiz Completed!</h1>
+                <p id="result-message" class="text-slate-500 font-medium">Excellent work keeping up.</p>
+            </div>
+
+            <div class="relative -mt-6 px-6 z-10">
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 text-center">
+                    <div class="text-5xl font-black text-primary mb-2" id="final-score">0</div>
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Total Score</div>
+                    
+                    <div class="grid grid-cols-3 gap-2 border-t border-slate-100 pt-6">
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-slate-800" id="stat-total">0</div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Questions</div>
+                        </div>
+                        <div class="text-center border-l border-slate-100">
+                            <div class="text-xl font-bold text-green-600" id="stat-accuracy">0%</div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Accuracy</div>
+                        </div>
+                        <div class="text-center border-l border-slate-100">
+                            <div class="text-xl font-bold text-slate-800" id="stat-wrong">0</div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Wrong</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 mt-auto space-y-3 pb-10">
+                <button onclick="location.reload()" class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-2">
+                    <span class="material-icons">refresh</span>
+                    Practice Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheet CSV URL
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJZEkxEDWul6x7wRY41Kynb-JF-4ZE5L9jLhYy2qgdlM3gKjB2vPAMG19CCwBhcUW3f1NR71IxOLT-/pub?output=csv";
+
+        // Helper to handle counting buttons in Setup
+        function selectCount(btn, value) {
+            document.querySelectorAll('.count-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white', 'border-primary');
+                b.classList.add('bg-white', 'text-slate-600', 'border-slate-100');
+            });
+            btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-100');
+            btn.classList.add('bg-primary', 'text-white', 'border-primary');
+            document.getElementById('selected-count').value = value;
+        }
+
+        const App = {
+            allQuestions: [],
+            currentSet: [],
+            answers: {},
+            flags: new Set(),
+            index: 0,
+            timer: null,
+            timeLeft: 0,
+            paletteOpen: false,
+
+            // Fallback data for demo purposes if CSV fails
+            demoData: [
+                {
+                    Chapter: "Demo Chapter",
+                    Question: "If $a^2 + b^2 = 25$ and $ab = 12$, find $(a+b)^2$.",
+                    OptionA: "25", OptionB: "37", OptionC: "49", OptionD: "60",
+                    Correct: "C"
+                },
+                {
+                    Chapter: "Demo Chapter",
+                    Question: "Solve for $x$: $2^{x+1} = 16$.",
+                    OptionA: "2", OptionB: "3", OptionC: "4", OptionD: "5",
+                    Correct: "B"
+                }
+            ],
+
+            async init() {
+                try {
+                    const response = await fetch(SHEET_URL);
+                    if(!response.ok) throw new Error("Network response was not ok");
+                    const csvText = await response.text();
+                    this.allQuestions = this.parseCSV(csvText);
+                    document.getElementById('connection-status').innerHTML = 
+                        '<span class="material-icons text-sm text-green-500">check_circle</span> Database Connected';
+                } catch (e) {
+                    console.warn("Using demo data due to fetch error:", e);
+                    this.allQuestions = this.demoData; // Fallback
+                    document.getElementById('connection-status').innerHTML = 
+                        '<span class="material-icons text-sm text-orange-500">warning</span> Demo Mode';
+                }
+                this.populateChapters();
+            },
+
+            parseCSV(text) {
+                const rows = text.split('\n').filter(r => r.trim());
+                const headers = rows[0].split(',').map(h => h.trim());
+                return rows.slice(1).map(row => {
+                    // Regex handles commas inside quotes
+                    const values = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+                    let obj = {};
+                    headers.forEach((h, i) => obj[h] = values[i]);
+                    return obj;
+                });
+            },
+
+            populateChapters() {
+                const chapters = [...new Set(this.allQuestions.map(q => q.Chapter))];
+                const select = document.getElementById('select-chapter');
+                select.innerHTML = '';
+                
+                if (chapters.length === 0) {
+                     const opt = document.createElement('option');
+                     opt.innerText = "No chapters found";
+                     select.appendChild(opt);
+                     return;
+                }
+
+                chapters.forEach(chap => {
+                    const opt = document.createElement('option');
+                    opt.value = chap; 
+                    opt.innerText = chap;
+                    select.appendChild(opt);
+                });
+            },
+
+            start() {
+                const chap = document.getElementById('select-chapter').value;
+                const countVal = parseInt(document.getElementById('selected-count').value);
+                
+                if (!chap) { alert("Please select a chapter"); return; }
+
+                const pool = this.allQuestions.filter(q => q.Chapter === chap);
+                
+                // Shuffle and Slice
+                this.currentSet = pool.sort(() => 0.5 - Math.random()).slice(0, countVal);
+                
+                if(this.currentSet.length === 0) {
+                    alert("No questions available for this chapter.");
+                    return;
+                }
+
+                this.timeLeft = this.currentSet.length * 60; // 1 min per question
+                this.answers = {};
+                this.flags = new Set();
+                this.index = 0;
+
+                // UI Transition
+                document.getElementById('screen-setup').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('screen-quiz').classList.add('active');
+                    this.renderQuestion();
+                    this.updatePalette();
+                    this.runTimer();
+                }, 300);
+            },
+
+            runTimer() {
+                this.timer = setInterval(() => {
+                    this.timeLeft--;
+                    let m = Math.floor(this.timeLeft / 60);
+                    let s = this.timeLeft % 60;
+                    document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                    
+                    if(this.timeLeft <= 0) this.finish();
+                }, 1000);
+            },
+
+            renderQuestion() {
+                const q = this.currentSet[this.index];
+                
+                // Progress
+                document.getElementById('progress-text').innerText = `${this.index + 1} / ${this.currentSet.length}`;
+                document.getElementById('progress-bar').style.width = `${((this.index + 1) / this.currentSet.length) * 100}%`;
+
+                // Question Text
+                const qTextEl = document.getElementById('question-text');
+                qTextEl.innerHTML = q.Question;
+                
+                // Options
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+                
+                ['A','B','C','D'].forEach(optKey => {
+                    const isSelected = this.answers[this.index] === optKey;
+                    const optText = q['Option'+optKey];
+                    
+                    const btn = document.createElement('div');
+                    // Styling logic
+                    let baseClass = "group relative flex items-center p-4 rounded-xl cursor-pointer border-2 transition-all active:scale-[0.98] ";
+                    if (isSelected) {
+                        baseClass += "bg-primary/5 border-primary shadow-sm";
+                    } else {
+                        baseClass += "bg-white border-slate-100 hover:border-primary/50";
+                    }
+
+                    btn.className = baseClass;
+                    btn.innerHTML = `
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 transition-colors ${isSelected ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'}">${optKey}</div>
+                        <span class="font-medium text-slate-700 flex-1">${optText}</span>
+                        ${isSelected ? '<span class="material-icons text-primary ml-2">check_circle</span>' : ''}
+                    `;
+                    
+                    btn.onclick = () => {
+                        this.answers[this.index] = optKey;
+                        this.renderQuestion(); // Re-render to update selection styles
+                        this.updatePalette();
+                    };
+                    
+                    container.appendChild(btn);
+                });
+
+                // Button States
+                const isLast = this.index === this.currentSet.length - 1;
+                document.getElementById('next-btn').style.display = isLast ? 'none' : 'flex';
+                document.getElementById('submit-btn').style.display = isLast ? 'flex' : 'none';
+                
+                // Flag State
+                const flagBtn = document.getElementById('flag-btn');
+                if (this.flags.has(this.index)) {
+                     flagBtn.classList.add('bg-yellow-100', 'border-yellow-400');
+                } else {
+                     flagBtn.classList.remove('bg-yellow-100', 'border-yellow-400');
+                }
+
+                // Trigger MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise([qTextEl, container]).catch((err) => console.log(err));
+                }
+            },
+
+            move(dir) {
+                const newIndex = this.index + dir;
+                if(newIndex >= 0 && newIndex < this.currentSet.length) {
+                    this.index = newIndex;
+                    this.renderQuestion();
+                }
+            },
+
+            toggleFlag() {
+                if(this.flags.has(this.index)) this.flags.delete(this.index);
+                else this.flags.add(this.index);
+                this.renderQuestion();
+                this.updatePalette();
+            },
+
+            togglePalette() {
+                const modal = document.getElementById('palette-modal');
+                const overlay = document.getElementById('palette-overlay');
+                
+                if (this.paletteOpen) {
+                    modal.classList.remove('open');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => modal.style.pointerEvents = 'none', 300);
+                } else {
+                    modal.classList.add('open');
+                    modal.style.pointerEvents = 'auto';
+                    overlay.style.opacity = '1';
+                }
+                this.paletteOpen = !this.paletteOpen;
+            },
+
+            updatePalette() {
+                const grid = document.getElementById('palette-grid');
+                grid.innerHTML = '';
+                
+                this.currentSet.forEach((_, idx) => {
+                    const btn = document.createElement('button');
+                    let classes = "w-full aspect-square rounded-lg font-bold text-sm flex items-center justify-center border-2 transition-all ";
+                    
+                    if (idx === this.index) {
+                        classes += "border-slate-800 bg-transparent text-slate-800 "; // Current cursor
+                    } else if (this.flags.has(idx)) {
+                        classes += "bg-yellow-100 border-yellow-400 text-yellow-700 ";
+                    } else if (this.answers[idx]) {
+                        classes += "bg-primary border-primary text-white ";
+                    } else {
+                        classes += "bg-slate-50 border-slate-200 text-slate-400 ";
+                    }
+
+                    btn.className = classes;
+                    btn.innerText = idx + 1;
+                    btn.onclick = () => {
+                        this.index = idx;
+                        this.renderQuestion();
+                        this.togglePalette();
+                    };
+                    grid.appendChild(btn);
+                });
+            },
+
+            finish() {
+                clearInterval(this.timer);
+                let score = 0;
+                let wrong = 0;
+                
+                this.currentSet.forEach((q, i) => { 
+                    if(this.answers[i] === q.Correct) {
+                        score++;
+                    } else if (this.answers[i]) {
+                        wrong++;
+                    }
+                });
+
+                document.getElementById('screen-quiz').classList.remove('active');
+                document.getElementById('screen-results').classList.add('active');
+                
+                // Animate Numbers
+                document.getElementById('final-score').innerText = score;
+                document.getElementById('stat-total').innerText = this.currentSet.length;
+                document.getElementById('stat-wrong').innerText = wrong;
+                
+                const accuracy = Math.round((score / this.currentSet.length) * 100);
+                document.getElementById('stat-accuracy').innerText = accuracy + '%';
+                
+                const msg = document.getElementById('result-message');
+                if (accuracy > 80) msg.innerText = "Outstanding Performance!";
+                else if (accuracy > 50) msg.innerText = "Good effort, keep practicing.";
+                else msg.innerText = "Don't give up! Try again.";
+            }
+        };
+
+        window.onload = () => App.init();
+    </script>
+</body>
+</html>
